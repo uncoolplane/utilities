@@ -16,38 +16,105 @@ var _ = { };
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
+    if (n === undefined) {
+      return array[0];
+    } else {
+      return array.slice(0, n);
+    }
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+    if(n === undefined) {
+      return array[array.length-1];
+    } else if (n > array.length) {
+      return array;
+    } else {
+      return array.slice(array.length-n, array.length);
+    }
   };
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
+    if(Array.isArray(collection)) {
+      for(var i = 0; i < collection.length; i++) {
+          iterator(collection[i], i, collection);
+      }
+    } else /*if (collection instanceof object) */ {
+      for(var key in collection) {
+        if(Array.isArray(collection[key])) {
+          _.each(collection[key]);
+        } else{
+          iterator(collection[key], key, collection);
+        }
+      }
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
+    if(array === undefined || target === undefined) {
+      return 1;
+    }
+
+    if(!array.indexOf) {
+      return 1;
+    } else {
+      var index = array.indexOf(target);
+      return index;
+    }
   };
 
   // Return all elements of an array that pass a truth test ('iterator' function argument)
   _.filter = function(collection, iterator) {
+    if(!Array.isArray(collection)) return;
+    for(var i = 0; i < collection.length; i++) {
+      if(!iterator(collection[i])) {
+        collection.splice(i, 1);
+      }
+    }
+    return collection;
   };
 
   // Return all elements of an array that don't pass a truth test (the 'iterator' function argument)
   _.reject = function(collection, iterator) {
+    if(!Array.isArray(collection)) return;
+
+    for(var i = 0; i < collection.length; i++) {
+      if(iterator(collection[i])) {
+          collection.splice(i, 1);
+      }
+    }
+    return collection;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    if(!Array.isArray(array)) return;
+
+    var newarr=[];
+    for(var i = 0; i < array.length; i++) {
+      if(newarr.indexOf(array[i]) === -1) {
+        newarr.push(array[i]);
+      }
+    }
+    return newarr;
   };
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
+    if(!Array.isArray(array)) return;
+
+    var results = [];
+    for (var i = 0; i < array.length; i++) {
+      results[i] = iterator(array[i]);
+    }
+
+    return results;
   };
 
   // Takes an array of objects and returns and array of the values of
